@@ -1,10 +1,24 @@
 #! /usr/bin/python3
+"""Download Links.
+I am writing this program to print a list of web pages to PDF so I can push them to EInk Tablet.
 
-# I am writing this program to print a list of web pages to PDF so I can push them to EInk Tablet.
+The program reads a list of \\n separated links from the provided input and prints them to PDF.
 
+Usage:
+    downloading_linked_pages.py [<links_file>] [--output-dir <dir_name>]
+    downloading_linked_pages.py (-h | --help)
+    downloading_linked_pages.py --version
+
+Options:
+    --output-dir=<dir_name>   Name of directory to put PDFs in.
+    -h --help                 Show this screen.
+    --version                 Show version.
+"""
+from docopt import docopt
+arguments = docopt(__doc__, version='Download Links 0.0')
 
 # Configuration and input parsing 
-from sys import argv            # Script parameters
+from sys import stdin, stdout   # Reading links from STDIN
 from arrow import now           # Current time
 from random import randint      # Random integer
 from os.path import exists      # Check file existence
@@ -20,34 +34,35 @@ from os.path import splitext    # Removing filetype extensions
 # Printing
 from weasyprint import HTML, CSS
 
-# File of links
-if len(argv) < 2:
-    print("Please provide a file of \\n separated links")
-    exit()
-else:
-    links_file = argv[1]
-
-# Output directory
-if len(argv) < 3:
+# Parsing input
+output_dir = arguments['--output-dir']
+if not output_dir:
     dirname = 'PDF_Download_' + now().format('YYYY-MM-DD_HH:mm:ss_') + str(randint(1,1000))
 else:
-    dirname = argv[2]
-
-if not exists(dirname):
-    mkdir(dirname)
-   
-print("Reading links from %s \nDownloading into %s" % (links_file, dirname))
-
-# Read links from file
+    dirname = output_dir
+    
 links = []
-with open(links_file, 'r') as f:
-    for i, line in enumerate(f):
+links_file = arguments['<links_file>']
+print("Reading links from", end=" ")
+if not links_file:
+    # Read links from STDIN
+    print("STDIN")
+    print("Downloading into", dirname)
+    for line in stdin:
         links.append(line.strip())
-
+else:
+    # Read links from file
+    print(links_file)
+    print("Downloading into", dirname)
+    with open(links_file, 'r') as f:
+        for line in f:
+            links.append(line.strip())    
 print("Links read as:")
 pprint(links)
 
-# Enter output directory
+# Output directory
+if not exists(dirname):
+    mkdir(dirname)
 chdir(dirname)
 
 # Helper for url manipulation
