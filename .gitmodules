@@ -1,0 +1,15 @@
+[submodule "reader-view"]
+	path = reader-view
+	url = https://github.com/rNeomy/reader-view.git
+[submodule "stackprinter"]
+	path = stackprinter
+	url = https://github.com/systempuntoout/stackprinter.git
+[submodule "wallabag"]
+	path = wallabag
+	url = https://github.com/wallabag/wallabag.git
+[submodule "mercury-parser"]
+	path = mercury-parser
+	url = https://github.com/postlight/mercury-parser.git
+[submodule "readability"]
+	path = readability
+	url = https://github.com/luin/readability.git
